@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - CivicVoice</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .admin-dashboard.hidden {
+            display: none;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- Header -->
+
+    <header>
+
+        <h1>CivicVoice Admin</h1>
+
+        <nav>
+
+            <a href="index.html">Home</a>
+
+            <a href="problems.html">Community Feed</a>
+
+            <a href="admin.html">Admin Dashboard</a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- Main Content -->
+
+    <main>
+
+        <section>
+
+            <h2>Admin Dashboard</h2>
+
+            <p>
+                Manage problems reported by citizens.
+            </p>
+
+
+            <!-- Admin Login -->
+
+            <div id="adminLoginSection">
+
+                <h3>Admin Login</h3>
+
+
+                <form id="adminLoginForm">
+
+                    <div>
+
+                        <label for="adminUsername">
+                            Admin Username:
+                        </label>
+
+                        <input type="text" id="adminUsername" placeholder="Enter admin username" required>
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="adminPassword">
+                            Admin Password:
+                        </label>
+
+                        <input type="password" id="adminPassword" placeholder="Enter admin password" required>
+
+                    </div>
+
+
+                    <button type="submit">
+                        Admin Login
+                    </button>
+
+                </form>
+
+
+                <p id="adminLoginMessage"></p>
+
+            </div>
+
+
+            <!-- Dashboard -->
+
+            <div id="adminDashboard" class="admin-dashboard hidden">
+
+                <h3>Reported Problems</h3>
+
+
+                <button type="button" id="loadProblemsButton">
+
+                    Load Problems
+
+                </button>
+
+
+                <div id="adminProblemsContainer">
+
+                    <p>
+                        Login as admin to view problems.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+            &copy; 2026 CivicVoice. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="js/admin.js"></script>
+
+</body>
+
+</html>

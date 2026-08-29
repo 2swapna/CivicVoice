@@ -1,0 +1,364 @@
+/* ==============================
+   1. Basic Reset
+   ============================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ==============================
+   2. Body
+   ============================== */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #222;
+    line-height: 1.6;
+}
+
+
+/* ==============================
+   3. Header
+   ============================== */
+
+header {
+    background-color: #1f6f5b;
+    color: white;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 28px;
+}
+
+
+/* ==============================
+   4. Navigation
+   ============================== */
+
+nav {
+    display: flex;
+    gap: 25px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 12px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    background-color: white;
+    color: #1f6f5b;
+    border-radius: 6px;
+}
+
+
+/* ==============================
+   5. Main Content
+   ============================== */
+
+main {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+
+/* ==============================
+   6. Sections
+   ============================== */
+
+section {
+    background-color: white;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: 0.3s;
+}
+
+section:hover {
+    transform: translateY(-3px);
+}
+
+section h2 {
+    color: #1f6f5b;
+    margin-bottom: 15px;
+}
+
+
+/* ==============================
+   7. Buttons
+   ============================== */
+
+button,
+main a {
+    display: inline-block;
+    background-color: #1f6f5b;
+    color: white;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 7px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+}
+
+
+/* Mouse over button */
+
+button:hover,
+main a:hover {
+    background-color: #155443;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+
+/* When button is clicked */
+
+button:active,
+main a:active {
+    transform: scale(0.95);
+    background-color: #0f3d32;
+}
+
+
+/* ==============================
+   8. Forms
+   ============================== */
+
+form {
+    max-width: 700px;
+}
+
+form div {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+
+/* Input fields */
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+
+/* When user clicks inside input */
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #1f6f5b;
+    box-shadow: 0 0 0 3px rgba(31, 111, 91, 0.15);
+}
+
+textarea {
+    resize: vertical;
+}
+
+
+/* ==============================
+   9. Complaint Cards
+   ============================== */
+
+article {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+
+/* Complaint hover */
+
+article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+article h3 {
+    color: #1f6f5b;
+    margin-bottom: 10px;
+}
+
+
+/* Complaint buttons */
+
+article button {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+
+/* ==============================
+   10. Complaint User
+   ============================== */
+
+.complaint-user {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.complaint-user p {
+    color: #777;
+    font-size: 14px;
+}
+
+
+/* ==============================
+   11. Complaint Status
+   ============================== */
+
+.complaint-status {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f4f7f6;
+    border-radius: 6px;
+}
+
+
+/* ==============================
+   12. Support Count
+   ============================== */
+
+.support-count {
+    margin-top: 15px;
+    color: #555;
+}
+
+
+/* ==============================
+   13. Comments
+   ============================== */
+
+.comments {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.comments h4 {
+    color: #1f6f5b;
+    margin-bottom: 15px;
+}
+
+.comment {
+    background-color: #f4f7f6;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 7px;
+}
+
+.comment strong {
+    font-size: 14px;
+}
+
+
+/* ==============================
+   14. Add Comment
+   ============================== */
+
+.add-comment {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.add-comment input {
+    flex: 1;
+}
+
+.add-comment button {
+    white-space: nowrap;
+}
+
+
+/* ==============================
+   15. Footer
+   ============================== */
+
+footer {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+
+/* ==============================
+   16. Responsive Design
+   ============================== */
+
+@media (max-width: 700px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    main {
+        margin-top: 20px;
+    }
+    .add-comment {
+        flex-direction: column;
+    }
+}
+
+
+/* ==============================
+   Form Messages
+   ============================== */
+
+#message {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+#message.error {
+    color: #b00020;
+    background-color: #ffe5e5;
+    border: 1px solid #b00020;
+}
+
+#message.success {
+    color: #146c43;
+    background-color: #e5f7ed;
+    border: 1px solid #146c43;
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report a Problem - CivicVoice</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+
+        <h1>CivicVoice</h1>
+
+        <!-- Navigation -->
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="report.html">Report Problem</a>
+            <a href="problems.html">View Problems</a>
+            <a href="about.html">About</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Main Content -->
+    <main>
+
+        <section>
+
+            <h2>Report a Problem</h2>
+
+            <p>
+                Help improve your community by reporting a problem in your area.
+            </p>
+
+
+            <!-- Complaint Form -->
+            <form id="reportForm">
+
+                <!-- Problem Category -->
+                <div>
+
+                    <label for="category">
+                        Problem Category:
+                    </label>
+
+                    <select id="category" name="category">
+
+                        <option value="">
+                            -- Select Category --
+                        </option>
+
+                        <option value="garbage">
+                            Garbage
+                        </option>
+
+                        <option value="streetlight">
+                            Broken Streetlight
+                        </option>
+
+                        <option value="pothole">
+                            Pothole
+                        </option>
+
+                        <option value="water">
+                            Water Leakage
+                        </option>
+
+                        <option value="drainage">
+                            Drainage
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Location -->
+                <div>
+
+                    <label for="location">
+                        Location:
+                    </label>
+
+                    <input type="text" id="location" name="location" placeholder="Enter the problem location">
+
+                </div>
+
+
+                <!-- Description -->
+                <div>
+
+                    <label for="description">
+                        Describe the Problem:
+                    </label>
+
+                    <textarea id="description" name="description" rows="6" placeholder="Explain the problem..."></textarea>
+
+                </div>
+
+
+                <!-- Image -->
+                <div>
+
+                    <label for="image">
+                        Upload Photo:
+                    </label>
+
+                    <input type="file" id="image" name="image" accept="image/*">
+
+                </div>
+
+
+                <!-- Submit Button -->
+                <div>
+
+                    <button type="submit">
+                        Submit Complaint
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            &copy; 2026 CivicVoice. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
