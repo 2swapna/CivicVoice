@@ -83,14 +83,13 @@ loginForm.addEventListener("submit", async function(event) {
 
     } catch (error) {
 
-        console.error(error);
+        console.error("LOGIN ERROR:", error);
 
         loginMessage.textContent =
-            "Could not connect to the CivicVoice server.";
+            "Connection error: " + error.message;
 
         loginMessage.className =
             "error";
 
     }
-
 });
