@@ -1,6 +1,6 @@
 /* =====================================================
-   ADMIN LOGIN
-   ===================================================== */
+   ADMIN CONFIGURATION
+===================================================== */
 
 const API_BASE_URL =
     "https://civicvoice-ymbf.onrender.com";
@@ -25,10 +25,9 @@ const adminProblemsContainer =
     document.querySelector("#adminProblemsContainer");
 
 
-
 /* =====================================================
    ADMIN LOGIN
-   ===================================================== */
+===================================================== */
 
 adminLoginForm.addEventListener(
     "submit",
@@ -60,11 +59,8 @@ adminLoginForm.addEventListener(
                     },
 
                     body: JSON.stringify({
-
                         username: username,
-
                         password: password
-
                     })
 
                 }
@@ -142,10 +138,9 @@ adminLoginForm.addEventListener(
 );
 
 
-
 /* =====================================================
    LOAD PROBLEMS BUTTON
-   ===================================================== */
+===================================================== */
 
 loadProblemsButton.addEventListener(
     "click",
@@ -157,10 +152,9 @@ loadProblemsButton.addEventListener(
 );
 
 
-
 /* =====================================================
    GET PROBLEMS FROM BACKEND
-   ===================================================== */
+===================================================== */
 
 async function loadAdminProblems() {
 
@@ -190,17 +184,12 @@ async function loadAdminProblems() {
                 method: "POST",
 
                 headers: {
-
                     "Content-Type": "application/json"
-
                 },
 
                 body: JSON.stringify({
-
                     username: username,
-
                     password: password
-
                 })
 
             }
@@ -236,7 +225,7 @@ async function loadAdminProblems() {
 
         /* =================================================
            DISPLAY EVERY REPORTED PROBLEM
-           ================================================= */
+        ================================================= */
 
         data.problems.forEach(problem => {
 
@@ -281,35 +270,36 @@ async function loadAdminProblems() {
 
                 ${
                     problem.image
-                    ?
-                    `
-                    <div>
+                        ?
+                        `
+                        <div>
 
+                            <p>
+                                <strong>Uploaded Photo:</strong>
+                            </p>
+
+                            <img
+                                src="${problem.image}"
+                                alt="Problem photo"
+                                style="
+                                    width: 300px;
+                                    max-width: 100%;
+                                    height: auto;
+                                    border-radius: 8px;
+                                    margin-bottom: 10px;
+                                    display: block;
+                                "
+                            >
+
+                        </div>
+                        `
+                        :
+                        `
                         <p>
                             <strong>Uploaded Photo:</strong>
+                            No photo uploaded.
                         </p>
-
-                        <img
-                            src="${API_BASE_URL}${problem.image}"
-                            alt="Problem photo"
-                            style="
-                                width: 300px;
-                                max-width: 100%;
-                                height: auto;
-                                border-radius: 8px;
-                                margin-bottom: 10px;
-                            "
-                        >
-
-                    </div>
-                    `
-                    :
-                    `
-                    <p>
-                        <strong>Uploaded Photo:</strong>
-                        No photo uploaded.
-                    </p>
-                    `
+                        `
                 }
 
 
@@ -348,15 +338,19 @@ async function loadAdminProblems() {
 
                 ${
                     problem.admin_reply
-                    ?
-                    `<p>
-                        <strong>Current Reply:</strong>
-                        ${problem.admin_reply}
-                    </p>`
-                    :
-                    `<p>
-                        No reply sent yet.
-                    </p>`
+                        ?
+                        `
+                        <p>
+                            <strong>Current Reply:</strong>
+                            ${problem.admin_reply}
+                        </p>
+                        `
+                        :
+                        `
+                        <p>
+                            No reply sent yet.
+                        </p>
+                        `
                 }
 
 
@@ -392,7 +386,7 @@ async function loadAdminProblems() {
 
         /* =================================================
            ADD REPLY BUTTON EVENTS
-           ================================================= */
+        ================================================= */
 
         const replyButtons =
             document.querySelectorAll(".reply-button");
@@ -402,7 +396,7 @@ async function loadAdminProblems() {
 
             button.addEventListener(
                 "click",
-                function() {
+                function () {
 
                     sendAdminReply(
                         button.dataset.id
@@ -427,10 +421,9 @@ async function loadAdminProblems() {
 }
 
 
-
 /* =====================================================
    SEND ADMIN REPLY
-   ===================================================== */
+===================================================== */
 
 async function sendAdminReply(problemId) {
 
@@ -503,7 +496,6 @@ async function sendAdminReply(problemId) {
             /* Reload problems */
 
             loadAdminProblems();
-
 
         } else {
 
