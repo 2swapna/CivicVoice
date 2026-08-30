@@ -2,6 +2,10 @@
    ADMIN LOGIN
    ===================================================== */
 
+const API_BASE_URL =
+    "https://civicvoice-ymbf.onrender.com";
+
+
 const adminLoginForm =
     document.querySelector("#adminLoginForm");
 
@@ -19,6 +23,7 @@ const loadProblemsButton =
 
 const adminProblemsContainer =
     document.querySelector("#adminProblemsContainer");
+
 
 
 /* =====================================================
@@ -46,7 +51,7 @@ adminLoginForm.addEventListener(
         try {
 
             const response = await fetch(
-                "http://127.0.0.1:5000/api/admin/login", {
+                `${API_BASE_URL}/api/admin/login`, {
 
                     method: "POST",
 
@@ -137,6 +142,7 @@ adminLoginForm.addEventListener(
 );
 
 
+
 /* =====================================================
    LOAD PROBLEMS BUTTON
    ===================================================== */
@@ -149,6 +155,7 @@ loadProblemsButton.addEventListener(
 
     }
 );
+
 
 
 /* =====================================================
@@ -178,7 +185,7 @@ async function loadAdminProblems() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:5000/api/admin/problems", {
+            `${API_BASE_URL}/api/admin/problems`, {
 
                 method: "POST",
 
@@ -283,7 +290,7 @@ async function loadAdminProblems() {
                         </p>
 
                         <img
-                            src="${problem.image}"
+                            src="${API_BASE_URL}${problem.image}"
                             alt="Problem photo"
                             style="
                                 width: 300px;
@@ -332,7 +339,7 @@ async function loadAdminProblems() {
 
                 <!-- ==============================
                      ADMIN REPLY
-                     ============================== -->
+                =============================== -->
 
                 <h4>
                     Admin Reply
@@ -420,6 +427,7 @@ async function loadAdminProblems() {
 }
 
 
+
 /* =====================================================
    SEND ADMIN REPLY
    ===================================================== */
@@ -453,7 +461,7 @@ async function sendAdminReply(problemId) {
 
         const response = await fetch(
 
-            `http://127.0.0.1:5000/api/problems/${problemId}/reply`,
+            `${API_BASE_URL}/api/problems/${problemId}/reply`,
 
             {
 

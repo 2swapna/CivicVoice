@@ -4,6 +4,13 @@
 
 
 /* =====================================================
+   BACKEND API URL
+   ===================================================== */
+
+const API_BASE_URL = "https://civicvoice-ymbf.onrender.com";
+
+
+/* =====================================================
    REGISTRATION
    ===================================================== */
 
@@ -33,6 +40,7 @@ if (registerForm) {
 
             message.textContent = "Please enter your name.";
             message.className = "error";
+
             return;
 
         }
@@ -42,6 +50,7 @@ if (registerForm) {
 
             message.textContent = "Please create a username.";
             message.className = "error";
+
             return;
 
         }
@@ -56,6 +65,7 @@ if (registerForm) {
                 "Please enter your phone number or email.";
 
             message.className = "error";
+
             return;
 
         }
@@ -69,6 +79,7 @@ if (registerForm) {
                     "Please enter a valid 10-digit phone number.";
 
                 message.className = "error";
+
                 return;
 
             }
@@ -84,6 +95,7 @@ if (registerForm) {
                     "Please enter a valid email address.";
 
                 message.className = "error";
+
                 return;
 
             }
@@ -95,6 +107,7 @@ if (registerForm) {
 
             message.textContent = "Please enter a password.";
             message.className = "error";
+
             return;
 
         }
@@ -104,6 +117,7 @@ if (registerForm) {
 
             message.textContent = "Passwords do not match.";
             message.className = "error";
+
             return;
 
         }
@@ -127,15 +141,23 @@ if (registerForm) {
         try {
 
             const response = await fetch(
-                "http://127.0.0.1:5000/api/register", {
+
+                `${API_BASE_URL}/api/register`,
+
+                {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type": "application/json"
+
                     },
 
                     body: JSON.stringify(userData)
+
                 }
+
             );
 
 
@@ -176,6 +198,7 @@ if (registerForm) {
 }
 
 
+
 /* =====================================================
    LOGIN
    ===================================================== */
@@ -189,7 +212,8 @@ if (loginForm) {
         event.preventDefault();
 
 
-        const login = document.querySelector("#login").value.trim();
+        const login =
+            document.querySelector("#login").value.trim();
 
         const password =
             document.querySelector("#password").value;
@@ -213,11 +237,17 @@ if (loginForm) {
         try {
 
             const response = await fetch(
-                "http://127.0.0.1:5000/api/login", {
+
+                `${API_BASE_URL}/api/login`,
+
+                {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type": "application/json"
+
                     },
 
                     body: JSON.stringify({
@@ -229,6 +259,7 @@ if (loginForm) {
                     })
 
                 }
+
             );
 
 
@@ -292,6 +323,7 @@ if (loginForm) {
 }
 
 
+
 /* =====================================================
    REPORT A PROBLEM
    ===================================================== */
@@ -303,7 +335,9 @@ const reportForm =
 if (reportForm) {
 
     reportForm.addEventListener(
+
         "submit",
+
         async function(event) {
 
             event.preventDefault();
@@ -410,7 +444,7 @@ if (reportForm) {
 
                 const response = await fetch(
 
-                    "http://127.0.0.1:5000/api/problems",
+                    `${API_BASE_URL}/api/problems`,
 
                     {
 
@@ -444,8 +478,10 @@ if (reportForm) {
                 } else {
 
                     alert(
+
                         data.message ||
                         "Could not report the problem."
+
                     );
 
                 }
@@ -462,9 +498,11 @@ if (reportForm) {
             }
 
         }
+
     );
 
 }
+
 
 
 /* =====================================================
@@ -482,6 +520,7 @@ if (problemsContainer) {
 }
 
 
+
 /* =====================================================
    LOAD COMMUNITY PROBLEMS
    ===================================================== */
@@ -491,11 +530,14 @@ async function loadCommunityProblems() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:5000/api/problems"
+
+            `${API_BASE_URL}/api/problems`
+
         );
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         if (data.status !== "success") {
@@ -508,7 +550,9 @@ async function loadCommunityProblems() {
         }
 
 
-        if (!data.problems || data.problems.length === 0) {
+        if (!data.problems ||
+            data.problems.length === 0
+        ) {
 
             problemsContainer.innerHTML =
                 "<p>No problems have been reported yet.</p>";
@@ -542,18 +586,27 @@ async function loadCommunityProblems() {
                     <div>
 
                         <p>
-                            <strong>Uploaded Photo:</strong>
+
+                            <strong>
+                                Uploaded Photo:
+                            </strong>
+
                         </p>
 
+
                         <img
-                            src="${problem.image}"
+
+                            src="${API_BASE_URL}${problem.image}"
+
                             alt="Problem photo"
+
                             style="
                                 width:300px;
                                 max-width:100%;
                                 height:auto;
                                 border-radius:8px;
                             "
+
                         >
 
                     </div>
@@ -565,12 +618,16 @@ async function loadCommunityProblems() {
 
             card.innerHTML = `
 
-                <h3>${problem.category}</h3>
+                <h3>
+                    ${problem.category}
+                </h3>
 
 
                 <p>
 
-                    <strong>Location:</strong>
+                    <strong>
+                        Location:
+                    </strong>
 
                     ${problem.location}
 
@@ -579,7 +636,9 @@ async function loadCommunityProblems() {
 
                 <p>
 
-                    <strong>Description:</strong>
+                    <strong>
+                        Description:
+                    </strong>
 
                     ${problem.description}
 
@@ -591,7 +650,9 @@ async function loadCommunityProblems() {
 
                 <p>
 
-                    <strong>Reported by:</strong>
+                    <strong>
+                        Reported by:
+                    </strong>
 
                     ${problem.username}
 
@@ -600,7 +661,9 @@ async function loadCommunityProblems() {
 
                 <p>
 
-                    <strong>Status:</strong>
+                    <strong>
+                        Status:
+                    </strong>
 
                     ${problem.status}
 
@@ -609,7 +672,9 @@ async function loadCommunityProblems() {
 
                 <p>
 
-                    <strong>Admin Reply:</strong>
+                    <strong>
+                        Admin Reply:
+                    </strong>
 
                     ${
                         problem.admin_reply
@@ -624,7 +689,9 @@ async function loadCommunityProblems() {
 
                 <p>
 
-                    <strong>Reported on:</strong>
+                    <strong>
+                        Reported on:
+                    </strong>
 
                     ${problem.created_at}
 
@@ -633,7 +700,9 @@ async function loadCommunityProblems() {
 
                 <p>
 
-                    <strong>Support:</strong>
+                    <strong>
+                        Support:
+                    </strong>
 
                     <span
                         id="support-count-${problem.id}"
@@ -647,9 +716,13 @@ async function loadCommunityProblems() {
 
 
                 <button
+
                     type="button"
+
                     class="support-button"
+
                     data-id="${problem.id}"
+
                 >
 
                     👍 Support
@@ -657,29 +730,41 @@ async function loadCommunityProblems() {
                 </button>
 
 
-                <h4>💬 Comments</h4>
+                <h4>
+                    💬 Comments
+                </h4>
 
 
                 <div
                     id="comments-${problem.id}"
                 >
 
-                    <p>Loading comments...</p>
+                    <p>
+                        Loading comments...
+                    </p>
 
                 </div>
 
 
                 <input
+
                     type="text"
+
                     id="comment-input-${problem.id}"
+
                     placeholder="Write a comment..."
+
                 >
 
 
                 <button
+
                     type="button"
+
                     class="comment-button"
+
                     data-id="${problem.id}"
+
                 >
 
                     Post Comment
@@ -709,7 +794,9 @@ async function loadCommunityProblems() {
         supportButtons.forEach(function(button) {
 
             button.addEventListener(
+
                 "click",
+
                 function() {
 
                     supportProblem(
@@ -717,6 +804,7 @@ async function loadCommunityProblems() {
                     );
 
                 }
+
             );
 
         });
@@ -731,7 +819,9 @@ async function loadCommunityProblems() {
         commentButtons.forEach(function(button) {
 
             button.addEventListener(
+
                 "click",
+
                 function() {
 
                     addComment(
@@ -739,6 +829,7 @@ async function loadCommunityProblems() {
                     );
 
                 }
+
             );
 
         });
@@ -754,6 +845,7 @@ async function loadCommunityProblems() {
     }
 
 }
+
 
 
 /* =====================================================
@@ -781,7 +873,7 @@ async function supportProblem(problemId) {
 
         const response = await fetch(
 
-            `http://127.0.0.1:5000/api/problems/${problemId}/support`,
+            `${API_BASE_URL}/api/problems/${problemId}/support`,
 
             {
 
@@ -835,8 +927,10 @@ async function supportProblem(problemId) {
         } else {
 
             alert(
+
                 data.message ||
                 "Could not support the problem."
+
             );
 
         }
@@ -855,6 +949,7 @@ async function supportProblem(problemId) {
 }
 
 
+
 /* =====================================================
    LOAD COMMENTS
    ===================================================== */
@@ -865,7 +960,7 @@ async function loadComments(problemId) {
 
         const response = await fetch(
 
-            `http://127.0.0.1:5000/api/problems/${problemId}/comments`
+            `${API_BASE_URL}/api/problems/${problemId}/comments`
 
         );
 
@@ -937,6 +1032,7 @@ async function loadComments(problemId) {
 }
 
 
+
 /* =====================================================
    ADD COMMENT
    ===================================================== */
@@ -990,7 +1086,7 @@ async function addComment(problemId) {
 
         const response = await fetch(
 
-            `http://127.0.0.1:5000/api/problems/${problemId}/comments`,
+            `${API_BASE_URL}/api/problems/${problemId}/comments`,
 
             {
 
@@ -1035,8 +1131,10 @@ async function addComment(problemId) {
         } else {
 
             alert(
+
                 data.message ||
                 "Could not add comment."
+
             );
 
         }

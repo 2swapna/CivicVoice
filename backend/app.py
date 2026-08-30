@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
+import os
 import sqlite3
 from pathlib import Path
 
@@ -12,12 +13,6 @@ from werkzeug.security import (
 from werkzeug.utils import secure_filename
 
 import time
-import random
-import smtplib
-
-from email.mime.text import MIMEText
-
-from datetime import datetime, timedelta
 
 
 # =====================================================
@@ -27,13 +22,6 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 CORS(app)
-
-
-# =====================================================
-# TEMPORARY OTP STORAGE
-# =====================================================
-
-otp_storage = {}
 
 
 # =====================================================
@@ -63,13 +51,9 @@ app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
 ALLOWED_EXTENSIONS = {
 
     "png",
-
     "jpg",
-
     "jpeg",
-
     "gif",
-
     "webp"
 
 }
@@ -140,7 +124,7 @@ def create_tables():
 
             password_hash TEXT NOT NULL,
 
-            verified INTEGER DEFAULT 0,
+            verified INTEGER DEFAULT 1,
 
             created_at TIMESTAMP
                 DEFAULT CURRENT_TIMESTAMP
@@ -276,305 +260,6 @@ def uploaded_file(filename):
 
 
 # =====================================================
-# SEND OTP
-# =====================================================
-
-@app.route(
-    "/api/send-otp",
-    methods=["POST"]
-)
-def send_otp():
-
-    data = request.get_json()
-
-
-    if not data:
-
-        return jsonify({
-
-            "status": "error",
-
-            "message":
-                "Invalid request data."
-
-        }), 400
-
-
-    email = data.get("email")
-
-
-    if not email:
-
-        return jsonify({
-
-            "status": "error",
-
-            "message":
-                "Email is required."
-
-        }), 400
-
-
-    # Generate 6-digit OTP
-
-    generated_otp = str(
-
-        random.randint(
-            100000,
-            999999
-        )
-
-    )
-
-
-    # Save OTP temporarily
-
-    otp_storage[email] = {
-
-        "otp":
-            generated_otp,
-
-        "expires_at":
-            datetime.now()
-            + timedelta(minutes=10)
-
-    }
-
-
-    try:
-
-        # =================================================
-        # IMPORTANT:
-        # REPLACE THESE WITH YOUR GMAIL DETAILS
-        # =================================================
-
-        sender_email = (
-            "YOUR_EMAIL@gmail.com"
-        )
-
-
-        app_password = (
-            "YOUR_GMAIL_APP_PASSWORD"
-        )
-
-
-        # =================================================
-        # EMAIL CONTENT
-        # =================================================
-
-        message = MIMEText(
-
-            f"""
-Your CivicVoice verification OTP is:
-
-{generated_otp}
-
-This OTP will expire in 10 minutes.
-
-Do not share this OTP with anyone.
-"""
-
-        )
-
-
-        message["Subject"] = (
-            "CivicVoice Email Verification OTP"
-        )
-
-
-        message["From"] = sender_email
-
-
-        message["To"] = email
-
-
-        # =================================================
-        # GMAIL SMTP
-        # =================================================
-
-        server = smtplib.SMTP(
-
-            "smtp.gmail.com",
-
-            587
-
-        )
-
-
-        server.starttls()
-
-
-        server.login(
-
-            sender_email,
-
-            app_password
-
-        )
-
-
-        server.sendmail(
-
-            sender_email,
-
-            email,
-
-            message.as_string()
-
-        )
-
-
-        server.quit()
-
-
-        return jsonify({
-
-            "status": "success",
-
-            "message":
-                "OTP sent successfully."
-
-        }), 200
-
-
-    except Exception as error:
-
-        print(
-            "OTP ERROR:",
-            error
-        )
-
-
-        return jsonify({
-
-            "status": "error",
-
-            "message":
-                "Could not send OTP."
-
-        }), 500
-
-
-# =====================================================
-# VERIFY OTP
-# =====================================================
-
-@app.route(
-    "/api/verify-otp",
-    methods=["POST"]
-)
-def verify_otp():
-
-    data = request.get_json()
-
-
-    if not data:
-
-        return jsonify({
-
-            "status": "error",
-
-            "message":
-                "Invalid request data."
-
-        }), 400
-
-
-    email = data.get("email")
-
-    entered_otp = data.get("otp")
-
-
-    if not email or not entered_otp:
-
-        return jsonify({
-
-            "status": "error",
-
-            "message":
-                "Email and OTP are required."
-
-        }), 400
-
-
-    if email not in otp_storage:
-
-        return jsonify({
-
-            "status": "error",
-
-            "message":
-                "Please request an OTP first."
-
-        }), 400
-
-
-    stored_data = otp_storage[email]
-
-
-    # Check expiry
-
-    if (
-
-        datetime.now()
-
-        >
-
-        stored_data["expires_at"]
-
-    ):
-
-        del otp_storage[email]
-
-
-        return jsonify({
-
-            "status": "error",
-
-            "message":
-                "OTP has expired. Please request a new OTP."
-
-        }), 400
-
-
-    # Check OTP
-
-    if (
-
-        entered_otp
-
-        !=
-
-        stored_data["otp"]
-
-    ):
-
-        return jsonify({
-
-            "status": "error",
-
-            "message":
-                "Incorrect OTP."
-
-        }), 400
-
-
-    # Remove OTP after successful verification
-
-    del otp_storage[email]
-
-
-    return jsonify({
-
-        "status": "success",
-
-        "message":
-            "OTP verified successfully."
-
-    }), 200
-
-
-# =====================================================
 # REGISTER USER
 # =====================================================
 
@@ -627,8 +312,6 @@ def register():
     cursor = connection.cursor()
 
 
-    # Check username
-
     existing_user = cursor.execute(
 
         "SELECT id FROM users WHERE username = ?",
@@ -651,8 +334,6 @@ def register():
 
         }), 409
 
-
-    # Check phone
 
     if phone:
 
@@ -679,8 +360,6 @@ def register():
             }), 409
 
 
-    # Check email
-
     if email:
 
         existing_email = cursor.execute(
@@ -706,29 +385,20 @@ def register():
             }), 409
 
 
-    # Hash password
-
     password_hash = generate_password_hash(
         password
     )
 
-
-    # Save user
 
     cursor.execute("""
 
         INSERT INTO users (
 
             name,
-
             username,
-
             phone,
-
             email,
-
             password_hash,
-
             verified
 
         )
@@ -738,15 +408,10 @@ def register():
     """, (
 
         name,
-
         username,
-
         phone,
-
         email,
-
         password_hash,
-
         1
 
     ))
@@ -829,9 +494,7 @@ def login():
     """, (
 
         login_value,
-
         login_value,
-
         login_value
 
     )).fetchone()
@@ -912,11 +575,8 @@ def create_problem():
     if (
 
         not username
-
         or not category
-
         or not location
-
         or not description
 
     ):
@@ -1003,30 +663,21 @@ def create_problem():
         image.save(
 
             UPLOAD_FOLDER
-
             /
-
             image_filename
 
         )
 
-
-    # Save problem
 
     cursor.execute("""
 
         INSERT INTO problems (
 
             user_id,
-
             category,
-
             location,
-
             description,
-
             image,
-
             status
 
         )
@@ -1036,15 +687,10 @@ def create_problem():
     """, (
 
         user["id"],
-
         category,
-
         location,
-
         description,
-
         image_filename,
-
         "Reported"
 
     ))
@@ -1090,25 +736,15 @@ def get_problems():
         SELECT
 
             problems.id,
-
             problems.category,
-
             problems.location,
-
             problems.description,
-
             problems.image,
-
             problems.status,
-
             problems.assigned_department,
-
             problems.admin_reply,
-
             problems.created_at,
-
             users.username,
-
             users.name
 
         FROM problems
@@ -1143,6 +779,10 @@ def get_problems():
         )).fetchone()[0]
 
 
+        # =================================================
+        # FIXED IMAGE URL FOR RENDER DEPLOYMENT
+        # =================================================
+
         image_url = None
 
 
@@ -1150,7 +790,7 @@ def get_problems():
 
             image_url = (
 
-                "http://127.0.0.1:5000/uploads/"
+                "https://civicvoice-ymbf.onrender.com/uploads/"
 
                 +
 
@@ -1261,7 +901,6 @@ def support_problem(problem_id):
             INSERT INTO supports (
 
                 problem_id,
-
                 user_id
 
             )
@@ -1271,7 +910,6 @@ def support_problem(problem_id):
         """, (
 
             problem_id,
-
             user["id"]
 
         ))
@@ -1387,9 +1025,7 @@ def add_comment(problem_id):
         INSERT INTO comments (
 
             problem_id,
-
             user_id,
-
             comment
 
         )
@@ -1399,9 +1035,7 @@ def add_comment(problem_id):
     """, (
 
         problem_id,
-
         user["id"],
-
         comment
 
     ))
@@ -1442,13 +1076,9 @@ def get_comments(problem_id):
         SELECT
 
             comments.id,
-
             comments.comment,
-
             comments.created_at,
-
             users.username,
-
             users.name
 
         FROM comments
@@ -1537,7 +1167,6 @@ def admin_reply(problem_id):
     """, (
 
         reply,
-
         problem_id
 
     ))
@@ -1642,8 +1271,6 @@ def admin_problems():
         }), 401
 
 
-    # Use the same problem data
-
     return get_problems()
 
 
@@ -1672,6 +1299,15 @@ if __name__ == "__main__":
 
     create_tables()
 
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
+
     app.run(
+        host="0.0.0.0",
+        port=port,
         debug=True
     )
