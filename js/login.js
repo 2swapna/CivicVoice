@@ -31,15 +31,18 @@ loginForm.addEventListener("submit", async function(event) {
 
         if (response.ok) {
 
-            // Save username separately.
-            // If the browser blocks localStorage,
-            // login should still be considered successful.
+            // Try localStorage
             try {
                 localStorage.setItem("username", data.username);
-            } catch (storageError) {
-                console.log(
-                    "Storage access denied, but login was successful."
-                );
+            } catch (error) {
+                console.log("localStorage unavailable.");
+            }
+
+            // Use sessionStorage as backup
+            try {
+                sessionStorage.setItem("username", data.username);
+            } catch (error) {
+                console.log("sessionStorage unavailable.");
             }
 
             loginMessage.textContent = "Login successful!";
