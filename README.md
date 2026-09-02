@@ -128,3 +128,16 @@ Community Feed
    |
    v
 Admin Dashboard
+## Author
+
+### Swapna C
+
+BCA Graduate interested in Frontend, Full-Stack Web Development and Cloud Computing.
+
+---
+
+## Project Links
+
+- **Live Website:** https://2swapna.github.io/CivicVoice/
+- **GitHub Repository:** https://github.com/2swapna/CivicVoice
+- **LinkedIn:** https://www.linkedin.com/in/swapna-c-s11s01/
