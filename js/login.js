@@ -31,18 +31,18 @@ loginForm.addEventListener("submit", async function(event) {
 
         if (response.ok) {
 
-            // Try localStorage
+            // Save username in localStorage
             try {
                 localStorage.setItem("username", data.username);
-            } catch (error) {
-                console.log("localStorage unavailable.");
+            } catch (storageError) {
+                console.log("localStorage is not available.");
             }
 
-            // Use sessionStorage as backup
+            // Save username in sessionStorage as backup
             try {
                 sessionStorage.setItem("username", data.username);
-            } catch (error) {
-                console.log("sessionStorage unavailable.");
+            } catch (storageError) {
+                console.log("sessionStorage is not available.");
             }
 
             loginMessage.textContent = "Login successful!";
