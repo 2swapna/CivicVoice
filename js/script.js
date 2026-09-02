@@ -17,6 +17,7 @@ const API_BASE_URL =
 
 function getLoggedInUsername() {
 
+    // 1. Try localStorage
     try {
 
         const username =
@@ -35,6 +36,7 @@ function getLoggedInUsername() {
     }
 
 
+    // 2. Try sessionStorage
     try {
 
         const username =
@@ -53,6 +55,41 @@ function getLoggedInUsername() {
     }
 
 
+    // 3. Try username from URL
+    try {
+
+        const urlParams =
+            new URLSearchParams(window.location.search);
+
+        const username =
+            urlParams.get("username");
+
+        if (username) {
+
+            // Try saving it again
+            try {
+                sessionStorage.setItem(
+                    "username",
+                    username
+                );
+            } catch (error) {
+                console.log(
+                    "Could not save username to sessionStorage."
+                );
+            }
+
+            return username;
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Could not read username from URL."
+        );
+
+    }
+
+
     return null;
 }
 
@@ -63,6 +100,7 @@ function getLoggedInUsername() {
 
 function saveLoggedInUser(username, name) {
 
+    // Save in localStorage
     try {
 
         localStorage.setItem(
@@ -72,7 +110,7 @@ function saveLoggedInUser(username, name) {
 
         localStorage.setItem(
             "name",
-            name
+            name || ""
         );
 
     } catch (error) {
@@ -84,6 +122,7 @@ function saveLoggedInUser(username, name) {
     }
 
 
+    // Save in sessionStorage
     try {
 
         sessionStorage.setItem(
@@ -93,7 +132,7 @@ function saveLoggedInUser(username, name) {
 
         sessionStorage.setItem(
             "name",
-            name
+            name || ""
         );
 
     } catch (error) {
@@ -112,7 +151,6 @@ function saveLoggedInUser(username, name) {
 
 const registerForm =
     document.querySelector("#registerForm");
-
 
 if (registerForm) {
 
@@ -143,7 +181,6 @@ if (registerForm) {
         async function(event) {
 
             event.preventDefault();
-
 
             message.textContent = "";
             message.className = "";
@@ -329,7 +366,6 @@ if (registerForm) {
 const loginForm =
     document.querySelector("#loginForm");
 
-
 if (loginForm) {
 
     loginForm.addEventListener(
@@ -386,6 +422,7 @@ if (loginForm) {
 
                             body: JSON.stringify({
                                 login: login,
+
                                 password: password
                             })
                         }
@@ -411,11 +448,20 @@ if (loginForm) {
                         "success";
 
 
+                    /*
+                     * Add username to the URL.
+                     * This acts as a backup on phones
+                     * where browser storage is restricted.
+                     */
+
                     setTimeout(
                         function() {
 
                             window.location.href =
-                                "index.html";
+                                "index.html?username=" +
+                                encodeURIComponent(
+                                    data.username
+                                );
 
                         },
                         500
@@ -456,7 +502,6 @@ if (loginForm) {
 
 const reportForm =
     document.querySelector("#reportForm");
-
 
 if (reportForm) {
 
@@ -650,7 +695,6 @@ const problemsContainer =
     document.querySelector(
         "#problemsContainer"
     );
-
 
 if (problemsContainer) {
 
@@ -871,7 +915,7 @@ async function loadCommunityProblems() {
 
 
                     <h4>
-                        💬 Comments
+                        Comments
                     </h4>
 
 
@@ -1232,9 +1276,11 @@ async function addComment(problemId) {
                     },
 
                     body: JSON.stringify({
+
                         username: username,
 
                         comment: comment
+
                     })
                 }
             );
@@ -1281,3 +1327,73 @@ async function addComment(problemId) {
     }
 
 }
+
+
+/* =====================================================
+   PRESERVE USERNAME WHEN MOVING BETWEEN PAGES
+   ===================================================== */
+
+(function preserveUsernameInLinks() {
+
+    const username =
+        getLoggedInUsername();
+
+    if (!username) {
+        return;
+    }
+
+
+    const links =
+        document.querySelectorAll(
+            "a[href]"
+        );
+
+
+    links.forEach(
+        function(link) {
+
+            const href =
+                link.getAttribute("href");
+
+
+            if (!href) {
+                return;
+            }
+
+
+            /*
+             * Only modify CivicVoice HTML page links.
+             * External links are left unchanged.
+             */
+
+            if (
+                href.endsWith(".html") ||
+                href === "index.html"
+            ) {
+
+                if (!href.includes("username=")) {
+
+                    const separator =
+                        href.includes("?") ?
+                        "&" :
+                        "?";
+
+
+                    link.setAttribute(
+                        "href",
+                        href +
+                        separator +
+                        "username=" +
+                        encodeURIComponent(
+                            username
+                        )
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+})();
