@@ -130,7 +130,6 @@ Community Feed
 Admin Dashboard
    |
    v
-Admin Dashboard
 ## Author
 
 ### Swapna C
