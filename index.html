@@ -29,9 +29,13 @@
 
             <a href="index.html">Home</a>
 
-            <a href="report.html">Report Problem</a>
+            <a href="report.html" id="reportLink">
+                Report Problem
+            </a>
 
-            <a href="problems.html">View Problems</a>
+            <a href="problems.html" id="problemsLink">
+                View Problems
+            </a>
 
             <a href="about.html">About</a>
 
@@ -56,7 +60,7 @@
                 Help improve your community by reporting problems in your area.
             </p>
 
-            <a href="report.html">
+            <a href="report.html" id="reportButton">
                 Report a Problem
             </a>
 
@@ -139,7 +143,7 @@
             </p>
 
 
-            <a href="problems.html">
+            <a href="problems.html" id="viewProblemsButton">
                 View All Problems
             </a>
 
@@ -166,8 +170,99 @@
 
     <script>
         /* =====================================================
-                                                   RECENT PROBLEMS
-                                                   ===================================================== */
+                   KEEP USERNAME WHEN MOVING BETWEEN PAGES
+                ===================================================== */
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const username =
+            urlParams.get("username");
+
+
+        /*
+         * Report Problem navigation
+         */
+
+        const reportLink =
+            document.querySelector("#reportLink");
+
+
+        const reportButton =
+            document.querySelector("#reportButton");
+
+
+        if (username) {
+
+            const reportURL =
+                "report.html?username=" +
+                encodeURIComponent(username);
+
+
+            if (reportLink) {
+
+                reportLink.href =
+                    reportURL;
+
+            }
+
+
+            if (reportButton) {
+
+                reportButton.href =
+                    reportURL;
+
+            }
+
+        }
+
+
+        /*
+         * View Problems navigation
+         */
+
+        const problemsLink =
+            document.querySelector("#problemsLink");
+
+
+        const viewProblemsButton =
+            document.querySelector(
+                "#viewProblemsButton"
+            );
+
+
+        if (username) {
+
+            const problemsURL =
+                "problems.html?username=" +
+                encodeURIComponent(username);
+
+
+            if (problemsLink) {
+
+                problemsLink.href =
+                    problemsURL;
+
+            }
+
+
+            if (viewProblemsButton) {
+
+                viewProblemsButton.href =
+                    problemsURL;
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           RECENT PROBLEMS
+        ===================================================== */
 
         const recentProblems =
             document.querySelector("#recentProblems");
@@ -225,7 +320,6 @@
 
 
                 latestProblems.forEach(problem => {
-
 
                     const article =
                         document.createElement("article");
