@@ -33,27 +33,60 @@ loginForm.addEventListener("submit", async function(event) {
 
             // Save username in localStorage
             try {
-                localStorage.setItem("username", data.username);
-            } catch (storageError) {
-                console.log("localStorage is not available.");
+                localStorage.setItem(
+                    "username",
+                    data.username
+                );
+            } catch (error) {
+                console.log(
+                    "localStorage is not available."
+                );
             }
 
-            // Save username in sessionStorage as backup
+            // Save username in sessionStorage
             try {
-                sessionStorage.setItem("username", data.username);
-            } catch (storageError) {
-                console.log("sessionStorage is not available.");
+                sessionStorage.setItem(
+                    "username",
+                    data.username
+                );
+            } catch (error) {
+                console.log(
+                    "sessionStorage is not available."
+                );
             }
 
-            loginMessage.textContent = "Login successful!";
-            loginMessage.className = "success";
+            loginMessage.textContent =
+                "Login successful!";
 
-            console.log("Logged in as:", data.username);
+            loginMessage.className =
+                "success";
+
+            console.log(
+                "Logged in as:",
+                data.username
+            );
+
+            /*
+             * Pass the username to the next page.
+             * This is the mobile fallback.
+             */
+            setTimeout(function() {
+
+                window.location.href =
+                    "index.html?username=" +
+                    encodeURIComponent(
+                        data.username
+                    );
+
+            }, 500);
 
         } else {
 
-            loginMessage.textContent = data.message;
-            loginMessage.className = "error";
+            loginMessage.textContent =
+                data.message;
+
+            loginMessage.className =
+                "error";
         }
 
     } catch (error) {
@@ -61,8 +94,10 @@ loginForm.addEventListener("submit", async function(event) {
         console.error("LOGIN ERROR:", error);
 
         loginMessage.textContent =
-            "Connection error: " + error.message;
+            "Connection error: " +
+            error.message;
 
-        loginMessage.className = "error";
+        loginMessage.className =
+            "error";
     }
 });
