@@ -1,330 +1,458 @@
 /* =====================================================
    CIVICVOICE - MAIN JAVASCRIPT
-===================================================== */
+   ===================================================== */
 
 
 /* =====================================================
    BACKEND API URL
-===================================================== */
+   ===================================================== */
 
-const API_BASE_URL = "https://civicvoice-ymbf.onrender.com";
+const API_BASE_URL =
+    "https://civicvoice-ymbf.onrender.com";
+
+
+/* =====================================================
+   GET LOGGED-IN USERNAME
+   ===================================================== */
+
+function getLoggedInUsername() {
+
+    try {
+
+        const username =
+            localStorage.getItem("username");
+
+        if (username) {
+            return username;
+        }
+
+    } catch (error) {
+
+        console.log(
+            "localStorage unavailable."
+        );
+
+    }
+
+
+    try {
+
+        const username =
+            sessionStorage.getItem("username");
+
+        if (username) {
+            return username;
+        }
+
+    } catch (error) {
+
+        console.log(
+            "sessionStorage unavailable."
+        );
+
+    }
+
+
+    return null;
+}
+
+
+/* =====================================================
+   SAVE LOGGED-IN USER
+   ===================================================== */
+
+function saveLoggedInUser(username, name) {
+
+    try {
+
+        localStorage.setItem(
+            "username",
+            username
+        );
+
+        localStorage.setItem(
+            "name",
+            name
+        );
+
+    } catch (error) {
+
+        console.log(
+            "localStorage unavailable."
+        );
+
+    }
+
+
+    try {
+
+        sessionStorage.setItem(
+            "username",
+            username
+        );
+
+        sessionStorage.setItem(
+            "name",
+            name
+        );
+
+    } catch (error) {
+
+        console.log(
+            "sessionStorage unavailable."
+        );
+
+    }
+}
 
 
 /* =====================================================
    REGISTRATION
-===================================================== */
+   ===================================================== */
 
-const registerForm = document.querySelector("#registerForm");
+const registerForm =
+    document.querySelector("#registerForm");
+
 
 if (registerForm) {
 
-    const name = document.querySelector("#name");
-    const username = document.querySelector("#username");
-    const phone = document.querySelector("#phone");
-    const email = document.querySelector("#email");
-    const password = document.querySelector("#password");
-    const confirmPassword = document.querySelector("#confirmPassword");
-    const message = document.querySelector("#message");
+    const name =
+        document.querySelector("#name");
+
+    const username =
+        document.querySelector("#username");
+
+    const phone =
+        document.querySelector("#phone");
+
+    const email =
+        document.querySelector("#email");
+
+    const password =
+        document.querySelector("#password");
+
+    const confirmPassword =
+        document.querySelector("#confirmPassword");
+
+    const message =
+        document.querySelector("#message");
 
 
-    registerForm.addEventListener("submit", async function(event) {
+    registerForm.addEventListener(
+        "submit",
+        async function(event) {
 
-        event.preventDefault();
-
-
-        message.textContent = "";
-        message.className = "";
+            event.preventDefault();
 
 
-        if (name.value.trim() === "") {
-
-            message.textContent = "Please enter your name.";
-            message.className = "error";
-
-            return;
-
-        }
+            message.textContent = "";
+            message.className = "";
 
 
-        if (username.value.trim() === "") {
-
-            message.textContent = "Please create a username.";
-            message.className = "error";
-
-            return;
-
-        }
-
-
-        if (
-            phone.value.trim() === "" &&
-            email.value.trim() === ""
-        ) {
-
-            message.textContent =
-                "Please enter your phone number or email.";
-
-            message.className = "error";
-
-            return;
-
-        }
-
-
-        if (phone.value.trim() !== "") {
-
-            if (!/^[0-9]{10}$/.test(phone.value.trim())) {
+            if (name.value.trim() === "") {
 
                 message.textContent =
-                    "Please enter a valid 10-digit phone number.";
+                    "Please enter your name.";
 
-                message.className = "error";
+                message.className =
+                    "error";
 
                 return;
-
             }
 
-        }
 
-
-        if (email.value.trim() !== "") {
-
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+            if (username.value.trim() === "") {
 
                 message.textContent =
-                    "Please enter a valid email address.";
+                    "Please create a username.";
 
-                message.className = "error";
+                message.className =
+                    "error";
 
                 return;
-
             }
 
-        }
+
+            if (
+                phone.value.trim() === "" &&
+                email.value.trim() === ""
+            ) {
+
+                message.textContent =
+                    "Please enter your phone number or email.";
+
+                message.className =
+                    "error";
+
+                return;
+            }
 
 
-        if (password.value === "") {
+            if (phone.value.trim() !== "") {
 
-            message.textContent = "Please enter a password.";
-            message.className = "error";
+                if (!/^[0-9]{10}$/.test(
+                        phone.value.trim()
+                    )) {
 
-            return;
+                    message.textContent =
+                        "Please enter a valid 10-digit phone number.";
 
-        }
+                    message.className =
+                        "error";
 
-
-        if (password.value !== confirmPassword.value) {
-
-            message.textContent = "Passwords do not match.";
-            message.className = "error";
-
-            return;
-
-        }
+                    return;
+                }
+            }
 
 
-        const userData = {
+            if (email.value.trim() !== "") {
 
-            name: name.value.trim(),
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                        email.value.trim()
+                    )) {
 
-            username: username.value.trim(),
+                    message.textContent =
+                        "Please enter a valid email address.";
 
-            phone: phone.value.trim(),
+                    message.className =
+                        "error";
 
-            email: email.value.trim(),
-
-            password: password.value
-
-        };
+                    return;
+                }
+            }
 
 
-        try {
+            if (password.value === "") {
 
-            const response = await fetch(
+                message.textContent =
+                    "Please enter a password.";
 
-                `${API_BASE_URL}/api/register`,
+                message.className =
+                    "error";
 
-                {
+                return;
+            }
 
-                    method: "POST",
 
-                    headers: {
+            if (
+                password.value !==
+                confirmPassword.value
+            ) {
 
-                        "Content-Type": "application/json"
+                message.textContent =
+                    "Passwords do not match.";
 
-                    },
+                message.className =
+                    "error";
 
-                    body: JSON.stringify(userData)
+                return;
+            }
 
+
+            const userData = {
+
+                name: name.value.trim(),
+
+                username: username.value.trim(),
+
+                phone: phone.value.trim(),
+
+                email: email.value.trim(),
+
+                password: password.value
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/register`, {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify(
+                                userData
+                            )
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (response.ok) {
+
+                    message.textContent =
+                        "Account created successfully! You can now login.";
+
+                    message.className =
+                        "success";
+
+                } else {
+
+                    message.textContent =
+                        data.message ||
+                        "Could not create account.";
+
+                    message.className =
+                        "error";
                 }
 
-            );
 
+            } catch (error) {
 
-            const data = await response.json();
-
-
-            if (response.ok) {
+                console.error(error);
 
                 message.textContent =
-                    "Account created successfully! You can now login.";
+                    "Could not connect to the CivicVoice server.";
 
-                message.className = "success";
-
-
-            } else {
-
-                message.textContent =
-                    data.message || "Could not create account.";
-
-                message.className = "error";
-
+                message.className =
+                    "error";
             }
 
-
-        } catch (error) {
-
-            console.error(error);
-
-            message.textContent =
-                "Could not connect to the CivicVoice server.";
-
-            message.className = "error";
-
         }
-
-    });
+    );
 
 }
 
 
 /* =====================================================
    LOGIN
-===================================================== */
+   ===================================================== */
 
-const loginForm = document.querySelector("#loginForm");
+const loginForm =
+    document.querySelector("#loginForm");
+
 
 if (loginForm) {
 
-    loginForm.addEventListener("submit", async function(event) {
+    loginForm.addEventListener(
+        "submit",
+        async function(event) {
 
-        event.preventDefault();
-
-
-        const login =
-            document.querySelector("#login").value.trim();
-
-        const password =
-            document.querySelector("#password").value;
-
-        const loginMessage =
-            document.querySelector("#loginMessage");
+            event.preventDefault();
 
 
-        if (login === "" || password === "") {
-
-            loginMessage.textContent =
-                "Please enter your login details.";
-
-            loginMessage.className = "error";
-
-            return;
-
-        }
+            const login =
+                document
+                .querySelector("#login")
+                .value
+                .trim();
 
 
-        try {
-
-            const response = await fetch(
-
-                `${API_BASE_URL}/api/login`,
-
-                {
-
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type": "application/json"
-
-                    },
-
-                    body: JSON.stringify({
-
-                        login: login,
-
-                        password: password
-
-                    })
-
-                }
-
-            );
+            const password =
+                document
+                .querySelector("#password")
+                .value;
 
 
-            const data = await response.json();
-
-
-            if (response.ok) {
-
-                localStorage.setItem(
-                    "username",
-                    data.username
+            const loginMessage =
+                document.querySelector(
+                    "#loginMessage"
                 );
 
 
-                localStorage.setItem(
-                    "name",
-                    data.name
-                );
-
-
-                loginMessage.textContent =
-                    "Login successful!";
-
-                loginMessage.className =
-                    "success";
-
-
-                setTimeout(function() {
-
-                    window.location.href =
-                        "index.html";
-
-                }, 500);
-
-
-            } else {
+            if (
+                login === "" ||
+                password === ""
+            ) {
 
                 loginMessage.textContent =
-                    data.message || "Login failed.";
+                    "Please enter your login details.";
 
                 loginMessage.className =
                     "error";
 
+                return;
             }
 
 
-        } catch (error) {
+            try {
 
-            console.error(error);
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/login`, {
+                            method: "POST",
 
-            loginMessage.textContent =
-                "Could not connect to the CivicVoice server.";
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
 
-            loginMessage.className =
-                "error";
+                            body: JSON.stringify({
+                                login: login,
+                                password: password
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (response.ok) {
+
+                    saveLoggedInUser(
+                        data.username,
+                        data.name
+                    );
+
+
+                    loginMessage.textContent =
+                        "Login successful!";
+
+                    loginMessage.className =
+                        "success";
+
+
+                    setTimeout(
+                        function() {
+
+                            window.location.href =
+                                "index.html";
+
+                        },
+                        500
+                    );
+
+
+                } else {
+
+                    loginMessage.textContent =
+                        data.message ||
+                        "Login failed.";
+
+                    loginMessage.className =
+                        "error";
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                loginMessage.textContent =
+                    "Could not connect to the CivicVoice server.";
+
+                loginMessage.className =
+                    "error";
+            }
 
         }
-
-    });
+    );
 
 }
 
 
 /* =====================================================
    REPORT A PROBLEM
-===================================================== */
+   ===================================================== */
 
 const reportForm =
     document.querySelector("#reportForm");
@@ -333,28 +461,44 @@ const reportForm =
 if (reportForm) {
 
     reportForm.addEventListener(
-
         "submit",
-
         async function(event) {
 
             event.preventDefault();
 
 
             const username =
-                localStorage.getItem("username");
+                getLoggedInUsername();
+
+
+            if (!username) {
+
+                alert(
+                    "Please login before reporting a problem."
+                );
+
+                return;
+            }
 
 
             const category =
-                document.querySelector("#category").value;
+                document
+                .querySelector("#category")
+                .value;
 
 
             const location =
-                document.querySelector("#location").value.trim();
+                document
+                .querySelector("#location")
+                .value
+                .trim();
 
 
             const description =
-                document.querySelector("#description").value.trim();
+                document
+                .querySelector("#description")
+                .value
+                .trim();
 
 
             const imageInput =
@@ -365,10 +509,11 @@ if (reportForm) {
 
             if (category === "") {
 
-                alert("Please select a problem category.");
+                alert(
+                    "Please select a problem category."
+                );
 
                 return;
-
             }
 
 
@@ -376,10 +521,11 @@ if (reportForm) {
 
             if (location === "") {
 
-                alert("Please enter the location.");
+                alert(
+                    "Please enter the location."
+                );
 
                 return;
-
             }
 
 
@@ -387,21 +533,23 @@ if (reportForm) {
 
             if (description === "") {
 
-                alert("Please describe the problem.");
+                alert(
+                    "Please describe the problem."
+                );
 
                 return;
-
             }
 
 
             /* Create FormData */
 
-            const formData = new FormData();
+            const formData =
+                new FormData();
 
 
             formData.append(
                 "username",
-                username || "Guest"
+                username
             );
 
 
@@ -426,6 +574,7 @@ if (reportForm) {
             /* Add Image */
 
             if (
+                imageInput &&
                 imageInput.files &&
                 imageInput.files.length > 0
             ) {
@@ -440,19 +589,13 @@ if (reportForm) {
 
             try {
 
-                const response = await fetch(
-
-                    `${API_BASE_URL}/api/problems`,
-
-                    {
-
-                        method: "POST",
-
-                        body: formData
-
-                    }
-
-                );
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/problems`, {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
 
 
                 const data =
@@ -476,10 +619,8 @@ if (reportForm) {
                 } else {
 
                     alert(
-
                         data.message ||
                         "Could not report the problem."
-
                     );
 
                 }
@@ -496,7 +637,6 @@ if (reportForm) {
             }
 
         }
-
     );
 
 }
@@ -504,10 +644,12 @@ if (reportForm) {
 
 /* =====================================================
    COMMUNITY FEED
-===================================================== */
+   ===================================================== */
 
 const problemsContainer =
-    document.querySelector("#problemsContainer");
+    document.querySelector(
+        "#problemsContainer"
+    );
 
 
 if (problemsContainer) {
@@ -519,30 +661,31 @@ if (problemsContainer) {
 
 /* =====================================================
    LOAD COMMUNITY PROBLEMS
-===================================================== */
+   ===================================================== */
 
 async function loadCommunityProblems() {
 
     try {
 
-        const response = await fetch(
-
-            `${API_BASE_URL}/api/problems`
-
-        );
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/problems`
+            );
 
 
         const data =
             await response.json();
 
 
-        if (data.status !== "success") {
+        if (
+            data.status !==
+            "success"
+        ) {
 
             problemsContainer.innerHTML =
                 "<p>Could not load problems.</p>";
 
             return;
-
         }
 
 
@@ -554,232 +697,242 @@ async function loadCommunityProblems() {
                 "<p>No problems have been reported yet.</p>";
 
             return;
-
         }
 
 
-        problemsContainer.innerHTML = "";
+        problemsContainer.innerHTML =
+            "";
 
 
-        data.problems.forEach(function(problem) {
+        data.problems.forEach(
+            function(problem) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
 
 
-            const card =
-                document.createElement("div");
+                card.className =
+                    "problem-card";
 
 
-            card.className =
-                "problem-card";
+                let imageHTML =
+                    "";
 
 
-            let imageHTML = "";
+                if (problem.image) {
+
+                    imageHTML = `
+
+                        <div>
+
+                            <p>
+
+                                <strong>
+                                    Uploaded Photo:
+                                </strong>
+
+                            </p>
+
+                            <img
+
+                                src="${problem.image}"
+
+                                alt="Problem photo"
+
+                                style="
+                                    width:300px;
+                                    max-width:100%;
+                                    height:auto;
+                                    border-radius:8px;
+                                "
+
+                            >
+
+                        </div>
+
+                    `;
+                }
 
 
-            if (problem.image) {
+                card.innerHTML = `
 
-                imageHTML = `
+                    <h3>
+                        ${problem.category}
+                    </h3>
 
-                    <div>
+
+                    <p>
+
+                        <strong>
+                            Location:
+                        </strong>
+
+                        ${problem.location}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Description:
+                        </strong>
+
+                        ${problem.description}
+
+                    </p>
+
+
+                    ${imageHTML}
+
+
+                    <p>
+
+                        <strong>
+                            Reported by:
+                        </strong>
+
+                        ${problem.username}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Status:
+                        </strong>
+
+                        ${problem.status}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Admin Reply:
+                        </strong>
+
+                        ${
+                            problem.admin_reply
+                                ?
+                                problem.admin_reply
+                                :
+                                "No reply from admin yet."
+                        }
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Reported on:
+                        </strong>
+
+                        ${problem.created_at}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Support:
+                        </strong>
+
+                        <span
+                            id="support-count-${problem.id}"
+                        >
+
+                            ${problem.support_count || 0}
+
+                        </span>
+
+                    </p>
+
+
+                    <button
+
+                        type="button"
+
+                        class="support-button"
+
+                        data-id="${problem.id}"
+
+                    >
+
+                        👍 Support
+
+                    </button>
+
+
+                    <h4>
+                        💬 Comments
+                    </h4>
+
+
+                    <div
+                        id="comments-${problem.id}"
+                    >
 
                         <p>
-
-                            <strong>
-                                Uploaded Photo:
-                            </strong>
-
+                            Loading comments...
                         </p>
-
-
-                        <img
-
-                            src="${problem.image}"
-
-                            alt="Problem photo"
-
-                            style="
-                                width:300px;
-                                max-width:100%;
-                                height:auto;
-                                border-radius:8px;
-                            "
-
-                        >
 
                     </div>
 
-                `;
 
-            }
+                    <input
 
+                        type="text"
 
-            card.innerHTML = `
+                        id="comment-input-${problem.id}"
 
-                <h3>
-                    ${problem.category}
-                </h3>
+                        placeholder="Write a comment..."
 
-
-                <p>
-
-                    <strong>
-                        Location:
-                    </strong>
-
-                    ${problem.location}
-
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        Description:
-                    </strong>
-
-                    ${problem.description}
-
-                </p>
-
-
-                ${imageHTML}
-
-
-                <p>
-
-                    <strong>
-                        Reported by:
-                    </strong>
-
-                    ${problem.username}
-
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        Status:
-                    </strong>
-
-                    ${problem.status}
-
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        Admin Reply:
-                    </strong>
-
-                    ${
-                        problem.admin_reply
-                            ?
-                            problem.admin_reply
-                            :
-                            "No reply from admin yet."
-                    }
-
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        Reported on:
-                    </strong>
-
-                    ${problem.created_at}
-
-                </p>
-
-
-                <p>
-
-                    <strong>
-                        Support:
-                    </strong>
-
-                    <span
-                        id="support-count-${problem.id}"
                     >
 
-                        ${problem.support_count || 0}
 
-                    </span>
+                    <button
 
-                </p>
+                        type="button"
 
+                        class="comment-button"
 
-                <button
+                        data-id="${problem.id}"
 
-                    type="button"
+                    >
 
-                    class="support-button"
+                        Post Comment
 
-                    data-id="${problem.id}"
-
-                >
-
-                    👍 Support
-
-                </button>
+                    </button>
 
 
-                <h4>
-                    💬 Comments
-                </h4>
+                    <hr>
+
+                `;
 
 
-                <div
-                    id="comments-${problem.id}"
-                >
-
-                    <p>
-                        Loading comments...
-                    </p>
-
-                </div>
+                problemsContainer.appendChild(
+                    card
+                );
 
 
-                <input
+                loadComments(
+                    problem.id
+                );
 
-                    type="text"
-
-                    id="comment-input-${problem.id}"
-
-                    placeholder="Write a comment..."
-
-                >
+            }
+        );
 
 
-                <button
-
-                    type="button"
-
-                    class="comment-button"
-
-                    data-id="${problem.id}"
-
-                >
-
-                    Post Comment
-
-                </button>
-
-
-                <hr>
-
-            `;
-
-
-            problemsContainer.appendChild(card);
-
-
-            loadComments(problem.id);
-
-        });
-
+        /* =================================================
+           SUPPORT BUTTON EVENTS
+           ================================================= */
 
         const supportButtons =
             document.querySelectorAll(
@@ -787,24 +940,27 @@ async function loadCommunityProblems() {
             );
 
 
-        supportButtons.forEach(function(button) {
+        supportButtons.forEach(
+            function(button) {
 
-            button.addEventListener(
+                button.addEventListener(
+                    "click",
+                    function() {
 
-                "click",
+                        supportProblem(
+                            button.dataset.id
+                        );
 
-                function() {
+                    }
+                );
 
-                    supportProblem(
-                        button.dataset.id
-                    );
+            }
+        );
 
-                }
 
-            );
-
-        });
-
+        /* =================================================
+           COMMENT BUTTON EVENTS
+           ================================================= */
 
         const commentButtons =
             document.querySelectorAll(
@@ -812,23 +968,22 @@ async function loadCommunityProblems() {
             );
 
 
-        commentButtons.forEach(function(button) {
+        commentButtons.forEach(
+            function(button) {
 
-            button.addEventListener(
+                button.addEventListener(
+                    "click",
+                    function() {
 
-                "click",
+                        addComment(
+                            button.dataset.id
+                        );
 
-                function() {
+                    }
+                );
 
-                    addComment(
-                        button.dataset.id
-                    );
-
-                }
-
-            );
-
-        });
+            }
+        );
 
 
     } catch (error) {
@@ -845,12 +1000,12 @@ async function loadCommunityProblems() {
 
 /* =====================================================
    SUPPORT PROBLEM
-===================================================== */
+   ===================================================== */
 
 async function supportProblem(problemId) {
 
     const username =
-        localStorage.getItem("username");
+        getLoggedInUsername();
 
 
     if (!username) {
@@ -860,35 +1015,25 @@ async function supportProblem(problemId) {
         );
 
         return;
-
     }
 
 
     try {
 
-        const response = await fetch(
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/problems/${problemId}/support`, {
+                    method: "POST",
 
-            `${API_BASE_URL}/api/problems/${problemId}/support`,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-            {
-
-                method: "POST",
-
-                headers: {
-
-                    "Content-Type": "application/json"
-
-                },
-
-                body: JSON.stringify({
-
-                    username: username
-
-                })
-
-            }
-
-        );
+                    body: JSON.stringify({
+                        username: username
+                    })
+                }
+            );
 
 
         const data =
@@ -905,7 +1050,8 @@ async function supportProblem(problemId) {
 
             if (
                 count &&
-                data.support_count !== undefined
+                data.support_count !==
+                undefined
             ) {
 
                 count.textContent =
@@ -922,10 +1068,8 @@ async function supportProblem(problemId) {
         } else {
 
             alert(
-
                 data.message ||
                 "Could not support the problem."
-
             );
 
         }
@@ -946,17 +1090,16 @@ async function supportProblem(problemId) {
 
 /* =====================================================
    LOAD COMMENTS
-===================================================== */
+   ===================================================== */
 
 async function loadComments(problemId) {
 
     try {
 
-        const response = await fetch(
-
-            `${API_BASE_URL}/api/problems/${problemId}/comments`
-
-        );
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/problems/${problemId}/comments`
+            );
 
 
         const data =
@@ -988,14 +1131,17 @@ async function loadComments(problemId) {
         }
 
 
-        commentsContainer.innerHTML = "";
+        commentsContainer.innerHTML =
+            "";
 
 
         data.comments.forEach(
             function(comment) {
 
                 const commentElement =
-                    document.createElement("p");
+                    document.createElement(
+                        "p"
+                    );
 
 
                 commentElement.innerHTML = `
@@ -1028,12 +1174,12 @@ async function loadComments(problemId) {
 
 /* =====================================================
    ADD COMMENT
-===================================================== */
+   ===================================================== */
 
 async function addComment(problemId) {
 
     const username =
-        localStorage.getItem("username");
+        getLoggedInUsername();
 
 
     if (!username) {
@@ -1043,7 +1189,6 @@ async function addComment(problemId) {
         );
 
         return;
-
     }
 
 
@@ -1077,31 +1222,22 @@ async function addComment(problemId) {
 
     try {
 
-        const response = await fetch(
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/problems/${problemId}/comments`, {
+                    method: "POST",
 
-            `${API_BASE_URL}/api/problems/${problemId}/comments`,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-            {
+                    body: JSON.stringify({
+                        username: username,
 
-                method: "POST",
-
-                headers: {
-
-                    "Content-Type": "application/json"
-
-                },
-
-                body: JSON.stringify({
-
-                    username: username,
-
-                    comment: comment
-
-                })
-
-            }
-
-        );
+                        comment: comment
+                    })
+                }
+            );
 
 
         const data =
@@ -1110,7 +1246,8 @@ async function addComment(problemId) {
 
         if (response.ok) {
 
-            commentInput.value = "";
+            commentInput.value =
+                "";
 
 
             alert(
@@ -1118,16 +1255,16 @@ async function addComment(problemId) {
             );
 
 
-            loadComments(problemId);
+            loadComments(
+                problemId
+            );
 
 
         } else {
 
             alert(
-
                 data.message ||
                 "Could not add comment."
-
             );
 
         }
