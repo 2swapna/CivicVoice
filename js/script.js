@@ -17,13 +17,56 @@ const API_BASE_URL =
 
 function getLoggedInUsername() {
 
+    /*
+     * First check the username from the URL.
+     *
+     * Example:
+     * report.html?username=swapna
+     */
+
+    try {
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const username =
+            urlParams.get("username");
+
+
+        if (username) {
+
+            return username;
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Could not read username from URL."
+        );
+
+    }
+
+
+    /*
+     * Keep localStorage as a fallback
+     * for pages that were already opened
+     * before this change.
+     */
+
     try {
 
         const username =
             localStorage.getItem("username");
 
+
         if (username) {
+
             return username;
+
         }
 
     } catch (error) {
@@ -35,57 +78,26 @@ function getLoggedInUsername() {
     }
 
 
+    /*
+     * Keep sessionStorage as a fallback.
+     */
+
     try {
 
         const username =
             sessionStorage.getItem("username");
 
+
         if (username) {
+
             return username;
+
         }
 
     } catch (error) {
 
         console.log(
             "sessionStorage unavailable."
-        );
-
-    }
-
-
-    /* =================================================
-       COOKIE FALLBACK FOR MOBILE
-    ================================================= */
-
-    try {
-
-        const cookies =
-            document.cookie.split(";");
-
-        for (let cookie of cookies) {
-
-            cookie = cookie.trim();
-
-            if (
-                cookie.startsWith(
-                    "civicvoice_username="
-                )
-            ) {
-
-                return decodeURIComponent(
-                    cookie.substring(
-                        "civicvoice_username=".length
-                    )
-                );
-
-            }
-
-        }
-
-    } catch (error) {
-
-        console.log(
-            "Cookie unavailable."
         );
 
     }
@@ -100,6 +112,11 @@ function getLoggedInUsername() {
 ===================================================== */
 
 function saveLoggedInUser(username, name) {
+
+    /*
+     * Save locally when the browser allows it.
+     * This is only a fallback.
+     */
 
     try {
 
@@ -157,20 +174,26 @@ if (registerForm) {
     const name =
         document.querySelector("#name");
 
+
     const username =
         document.querySelector("#username");
+
 
     const phone =
         document.querySelector("#phone");
 
+
     const email =
         document.querySelector("#email");
+
 
     const password =
         document.querySelector("#password");
 
+
     const confirmPassword =
         document.querySelector("#confirmPassword");
+
 
     const message =
         document.querySelector("#message");
@@ -349,6 +372,7 @@ if (registerForm) {
 
                 console.error(error);
 
+
                 message.textContent =
                     "Could not connect to the CivicVoice server.";
 
@@ -438,6 +462,10 @@ if (loginForm) {
 
                 if (response.ok) {
 
+                    /*
+                     * Save as fallback.
+                     */
+
                     saveLoggedInUser(
                         data.username,
                         data.name
@@ -451,11 +479,21 @@ if (loginForm) {
                         "success";
 
 
+                    /*
+                     * IMPORTANT:
+                     *
+                     * Pass username directly
+                     * through the URL.
+                     */
+
                     setTimeout(
                         function() {
 
                             window.location.href =
-                                "index.html";
+                                "index.html?username=" +
+                                encodeURIComponent(
+                                    data.username
+                                );
 
                         },
                         500
@@ -476,6 +514,7 @@ if (loginForm) {
             } catch (error) {
 
                 console.error(error);
+
 
                 loginMessage.textContent =
                     "Could not connect to the CivicVoice server.";
@@ -506,6 +545,10 @@ if (reportForm) {
 
             event.preventDefault();
 
+
+            /*
+             * Get username from URL first.
+             */
 
             const username =
                 getLoggedInUsername();
@@ -633,6 +676,7 @@ if (reportForm) {
                     await fetch(
                         `${API_BASE_URL}/api/problems`, {
                             method: "POST",
+
                             body: formData
                         }
                     );
@@ -652,8 +696,16 @@ if (reportForm) {
                     reportForm.reset();
 
 
+                    /*
+                     * Keep username when
+                     * going to problems page.
+                     */
+
                     window.location.href =
-                        "problems.html";
+                        "problems.html?username=" +
+                        encodeURIComponent(
+                            username
+                        );
 
 
                 } else {
@@ -669,6 +721,7 @@ if (reportForm) {
             } catch (error) {
 
                 console.error(error);
+
 
                 alert(
                     "Could not connect to the CivicVoice server."
@@ -776,23 +829,20 @@ async function loadCommunityProblems() {
                             </p>
 
                             <img
-
                                 src="${problem.image}"
-
                                 alt="Problem photo"
-
                                 style="
                                     width:300px;
                                     max-width:100%;
                                     height:auto;
                                     border-radius:8px;
                                 "
-
                             >
 
                         </div>
 
                     `;
+
                 }
 
 
@@ -896,17 +946,11 @@ async function loadCommunityProblems() {
 
 
                     <button
-
                         type="button"
-
                         class="support-button"
-
                         data-id="${problem.id}"
-
                     >
-
                         Support
-
                     </button>
 
 
@@ -927,28 +971,18 @@ async function loadCommunityProblems() {
 
 
                     <input
-
                         type="text"
-
                         id="comment-input-${problem.id}"
-
                         placeholder="Write a comment..."
-
                     >
 
 
                     <button
-
                         type="button"
-
                         class="comment-button"
-
                         data-id="${problem.id}"
-
                     >
-
                         Post Comment
-
                     </button>
 
 
@@ -1029,6 +1063,7 @@ async function loadCommunityProblems() {
     } catch (error) {
 
         console.error(error);
+
 
         problemsContainer.innerHTML =
             "<p>Could not connect to the CivicVoice server.</p>";
@@ -1118,6 +1153,7 @@ async function supportProblem(problemId) {
     } catch (error) {
 
         console.error(error);
+
 
         alert(
             "Could not connect to the CivicVoice server."
@@ -1313,6 +1349,7 @@ async function addComment(problemId) {
     } catch (error) {
 
         console.error(error);
+
 
         alert(
             "Could not connect to the CivicVoice server."
