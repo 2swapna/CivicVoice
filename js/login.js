@@ -55,6 +55,18 @@ loginForm.addEventListener("submit", async function(event) {
                 );
             }
 
+            // Save username in cookie
+            try {
+                document.cookie =
+                    "civicvoice_username=" +
+                    encodeURIComponent(data.username) +
+                    "; path=/; max-age=86400; SameSite=Lax; Secure";
+            } catch (error) {
+                console.log(
+                    "Cookie unavailable."
+                );
+            }
+
             loginMessage.textContent =
                 "Login successful!";
 
@@ -66,10 +78,6 @@ loginForm.addEventListener("submit", async function(event) {
                 data.username
             );
 
-            /*
-             * Pass the username to the next page.
-             * This is the mobile fallback.
-             */
             setTimeout(function() {
 
                 window.location.href =
@@ -91,7 +99,10 @@ loginForm.addEventListener("submit", async function(event) {
 
     } catch (error) {
 
-        console.error("LOGIN ERROR:", error);
+        console.error(
+            "LOGIN ERROR:",
+            error
+        );
 
         loginMessage.textContent =
             "Connection error: " +

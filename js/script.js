@@ -1,11 +1,11 @@
 /* =====================================================
    CIVICVOICE - MAIN JAVASCRIPT
-   ===================================================== */
+===================================================== */
 
 
 /* =====================================================
    BACKEND API URL
-   ===================================================== */
+===================================================== */
 
 const API_BASE_URL =
     "https://civicvoice-ymbf.onrender.com";
@@ -13,7 +13,7 @@ const API_BASE_URL =
 
 /* =====================================================
    GET LOGGED-IN USERNAME
-   ===================================================== */
+===================================================== */
 
 function getLoggedInUsername() {
 
@@ -53,13 +53,51 @@ function getLoggedInUsername() {
     }
 
 
+    /* =================================================
+       COOKIE FALLBACK FOR MOBILE
+    ================================================= */
+
+    try {
+
+        const cookies =
+            document.cookie.split(";");
+
+        for (let cookie of cookies) {
+
+            cookie = cookie.trim();
+
+            if (
+                cookie.startsWith(
+                    "civicvoice_username="
+                )
+            ) {
+
+                return decodeURIComponent(
+                    cookie.substring(
+                        "civicvoice_username=".length
+                    )
+                );
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Cookie unavailable."
+        );
+
+    }
+
+
     return null;
 }
 
 
 /* =====================================================
    SAVE LOGGED-IN USER
-   ===================================================== */
+===================================================== */
 
 function saveLoggedInUser(username, name) {
 
@@ -108,7 +146,7 @@ function saveLoggedInUser(username, name) {
 
 /* =====================================================
    REGISTRATION
-   ===================================================== */
+===================================================== */
 
 const registerForm =
     document.querySelector("#registerForm");
@@ -202,6 +240,7 @@ if (registerForm) {
 
                     return;
                 }
+
             }
 
 
@@ -219,6 +258,7 @@ if (registerForm) {
 
                     return;
                 }
+
             }
 
 
@@ -324,7 +364,7 @@ if (registerForm) {
 
 /* =====================================================
    LOGIN
-   ===================================================== */
+===================================================== */
 
 const loginForm =
     document.querySelector("#loginForm");
@@ -452,7 +492,7 @@ if (loginForm) {
 
 /* =====================================================
    REPORT A PROBLEM
-   ===================================================== */
+===================================================== */
 
 const reportForm =
     document.querySelector("#reportForm");
@@ -644,7 +684,7 @@ if (reportForm) {
 
 /* =====================================================
    COMMUNITY FEED
-   ===================================================== */
+===================================================== */
 
 const problemsContainer =
     document.querySelector(
@@ -661,7 +701,7 @@ if (problemsContainer) {
 
 /* =====================================================
    LOAD COMMUNITY PROBLEMS
-   ===================================================== */
+===================================================== */
 
 async function loadCommunityProblems() {
 
@@ -865,13 +905,13 @@ async function loadCommunityProblems() {
 
                     >
 
-                        👍 Support
+                        Support
 
                     </button>
 
 
                     <h4>
-                        💬 Comments
+                        Comments
                     </h4>
 
 
@@ -932,7 +972,7 @@ async function loadCommunityProblems() {
 
         /* =================================================
            SUPPORT BUTTON EVENTS
-           ================================================= */
+        ================================================= */
 
         const supportButtons =
             document.querySelectorAll(
@@ -960,7 +1000,7 @@ async function loadCommunityProblems() {
 
         /* =================================================
            COMMENT BUTTON EVENTS
-           ================================================= */
+        ================================================= */
 
         const commentButtons =
             document.querySelectorAll(
@@ -1000,7 +1040,7 @@ async function loadCommunityProblems() {
 
 /* =====================================================
    SUPPORT PROBLEM
-   ===================================================== */
+===================================================== */
 
 async function supportProblem(problemId) {
 
@@ -1090,7 +1130,7 @@ async function supportProblem(problemId) {
 
 /* =====================================================
    LOAD COMMENTS
-   ===================================================== */
+===================================================== */
 
 async function loadComments(problemId) {
 
@@ -1174,7 +1214,7 @@ async function loadComments(problemId) {
 
 /* =====================================================
    ADD COMMENT
-   ===================================================== */
+===================================================== */
 
 async function addComment(problemId) {
 
